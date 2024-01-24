@@ -296,7 +296,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         "async_turn_off",
     )
 
-    async def reload_all_service_handler(service_call: ServiceCall) -> None:
+    async def reload_service_handler(service_call: ServiceCall) -> None:
         """Remove all automations and load new ones from config."""
         await async_get_blueprints(hass).async_reset_cache()
         if (conf := await component.async_prepare_reload(skip_reset=True)) is None:
@@ -312,7 +312,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             return {automation_id}
         return {automation.unique_id for automation in component.entities}
 
-    reload_helper = ReloadServiceHelper(reload_all_service_handler, reload_targets)
+    reload_helper = ReloadServiceHelper(reload_service_handler, reload_targets)
 
     async_register_admin_service(
         hass,
